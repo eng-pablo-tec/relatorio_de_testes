@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerador de Relatório de Testes</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <nav>
+    <button onclick="mostrarAba('formulario')">Gerar Relatório</button>
+    <button onclick="mostrarAba('exemplo')">Exemplo Preenchido</button>
+  </nav>
+
+  <section id="formulario">
+    <h1>Gerador de Relatório Memorial Descritivo</h1>
+    <form id="formulario-teste">
+      <label>Projeto:<input name="projeto" required /></label>
+      <label>Contextualização Geral:<textarea name="contextualizacao" required></textarea></label>
+      <label>Plano e Suíte de Testes:<input name="plano" required /></label>
+      <label>Nome do Caso de Teste:<input name="nome" required /></label>
+      <label>Prioridade:<select name="prioridade">
+        <option>Alta</option><option>Média</option><option>Baixa</option></select></label>
+      <label>Status:<select name="status">
+        <option>Em execução</option><option>Aprovado</option><option>Reprovado</option></select></label>
+      <label>Executor:<input name="executor" /></label>
+      <label>Data de Criação:<input name="data" type="date" /></label>
+      <label>Pré-condições:<textarea name="pre" required></textarea></label>
+      <label>Passos para Execução:<textarea name="passos" required></textarea></label>
+      <label>Critérios de Aceitação:<textarea name="criterios" required></textarea></label>
+      <label>Resultado Obtido:<textarea name="resultado" required></textarea></label>
+      <label>Observações Técnicas:<textarea name="observacoes"></textarea></label>
+      <label>Comentários:<textarea name="comentarios"></textarea></label>
+      <label>Ferramenta de Automação:<select name="ferramenta">
+        <option>Cypress</option><option>Selenium</option></select></label>
+      <label>Nome do Arquivo do Script:<input name="arquivo" required /></label>
+      <label>Código Completo do Script:<textarea name="codigo" required></textarea></label>
+      <button type="submit">Gerar Relatório</button>
+    </form>
+    <button id="copiar" style="display:none;">Copiar Relatório</button>
+    <div id="relatorio" style="display:none;"></div>
+  </section>
+
+  <section id="exemplo" style="display:none;">
+    <h1>Exemplo de Formulário Preenchido</h1>
+    <p><strong>Projeto:</strong> Plataforma de Aprendizagem Interativa</p>
+    <p><strong>Contextualização Geral:</strong> A homepage serve como porta de entrada estratégica...</p>
+    <p><strong>Plano:</strong> Testes Funcionais > Homepage</p>
+    <p><strong>Nome do Caso:</strong> Validação de links e elementos principais</p>
+    <p><strong>Prioridade:</strong> Alta</p>
+    <p><strong>Status:</strong> Em execução</p>
+    <p><strong>Executor:</strong> João Silva</p>
+    <p><strong>Data:</strong> 2025-05-20</p>
+    <p><strong>Pré-condições:</strong> Sistema online e usuário visitante acessando via desktop</p>
+    <p><strong>Passos:</strong> 1. Acessar homepage; 2. Verificar logotipo; 3. Clicar em "Login"</p>
+    <p><strong>Critérios de Aceitação:</strong> Todos os elementos devem carregar corretamente</p>
+    <p><strong>Resultado Obtido:</strong> Todos os elementos funcionaram como esperado</p>
+    <p><strong>Observações Técnicas:</strong> Página carrega rápido; sem erros em console</p>
+    <p><strong>Comentários:</strong> Verificar desempenho em dispositivos móveis</p>
+    <p><strong>Ferramenta:</strong> Cypress</p>
+    <p><strong>Nome do Arquivo:</strong> homepage.cy.js</p>
+    <p><strong>Código:</strong></p>
+    <pre>
+describe('Homepage', () => {
+  it('deve exibir todos os elementos principais', () => {
+    cy.visit('/');
+    cy.get('header').should('exist');
+    cy.contains('Login').click();
+    cy.url().should('include', '/login');
+  });
+});
+    </pre>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
