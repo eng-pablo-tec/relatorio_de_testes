@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gerador de Relatório de Testes</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- jsPDF CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <nav>
@@ -38,6 +40,7 @@
       <button type="submit">Gerar Relatório</button>
     </form>
     <button id="copiar" style="display:none;">Copiar Relatório</button>
+    <button id="downloadPdf" style="display:none; margin-left: 10px;">Download PDF</button>
     <div id="relatorio" style="display:none;"></div>
   </section>
 
@@ -45,7 +48,7 @@
     <h1>Exemplo de Formulário Preenchido</h1>
     <p><strong>Projeto:</strong> Plataforma de Aprendizagem Interativa</p>
     <p><strong>Contextualização Geral:</strong> A homepage serve como porta de entrada estratégica...</p>
-    <p><strong>Plano:</strong> Testes Funcionais > Homepage</p>
+    <p><strong>Plano:</strong> Testes Funcionais &gt; Homepage</p>
     <p><strong>Nome do Caso:</strong> Validação de links e elementos principais</p>
     <p><strong>Prioridade:</strong> Alta</p>
     <p><strong>Status:</strong> Em execução</p>
@@ -72,6 +75,206 @@ describe('Homepage', () => {
     </pre>
   </section>
 
-  <script src="script.js"></script>
+  <script>
+    const copiarBtn = document.getElementById("copiar");
+    const downloadBtn = document.getElementById("downloadPdf");
+    const relatorio = document.getElementById("relatorio");
+
+    document.getElementById("formulario-teste").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const dados = Object.fromEntries(new FormData(e.target));
+
+      const texto = `
+MEMORIAL DESCRITIVO - CASO DE TESTE
+
+Projeto: ${dados.projeto}
+
+Contextualização Geral:
+O presente relatório descreve o caso de teste referente ao projeto "${dados.projeto}", abordando detalhadamente seu contexto funcional e técnico. ${dados.contextualizacao}
+
+Plano e Suíte de Testes:
+${dados.plano}
+
+Nome do Caso de Teste:
+${dados.nome}
+
+Prioridade: ${dados.prioridade}
+Status: ${dados.status}
+
+Executor Responsável: ${dados.executor}
+Data de Criação: ${dados.data}
+
+Pré-condições:
+${dados.pre}
+
+Passos para Execução:
+${dados.passos}
+
+Critérios de Aceitação:
+${dados.criterios}
+
+Resultado Obtido:
+${dados.resultado}
+
+Observações Técnicas:
+${dados.observacoes}
+
+Comentários Complementares:
+${dados.comentarios}
+
+Ferramenta de Automação: ${dados.ferramenta}
+Nome do Arquivo do Script: ${dados.arquivo}
+
+Código Completo do Script:
+------------------------------------------------------------
+${dados.codigo}
+------------------------------------------------------------
+
+Conclusão:
+
+Este memorial descritivo sintetiza o escopo, a criticidade e os detalhes técnicos do caso de teste apresentado, ressaltando sua importância fundamental para garantir a qualidade e a estabilidade da plataforma testada. A elaboração cuidadosa deste relatório, enriquecido com contextualizações robustas, tem o objetivo de fornecer uma base sólida para o entendimento, a execução e a validação do teste, além de servir como documento referencial para etapas futuras do projeto.
+
+Recomenda-se, ainda, o desenvolvimento de testes complementares focados em outras dimensões, tais como testes para dispositivos móveis, acessibilidade e performance, garantindo assim uma cobertura completa e uma experiência final otimizada para todos os usuários.
+      `.trim();
+
+      relatorio.textContent = texto;
+      relatorio.style.display = "block";
+      copiarBtn.style.display = "inline-block";
+      downloadBtn.style.display = "inline-block";
+    });
+
+    copiarBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(relatorio.textContent);
+      alert("Relatório copiado com sucesso!");
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const texto = relatorio.textContent;
+      const linhas = doc.splitTextToSize(texto, 180); // largura da página em mm
+
+      doc.setFont("Courier", "normal");
+      doc.setFontSize(11);
+      doc.text(linhas, 10, 10);
+
+      doc.save("relatorio_teste.pdf");
+    });
+
+    function mostrarAba(id) {
+      document.getElementById("formulario").style.display = id === "formulario" ? "block" : "none";
+      document.getElementById("exemplo").style.display = id === "exemplo" ? "block" : "none";
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #eef2f7;
+      margin: 0;
+      padding: 0 20px;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin: 30px 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      background: #d7e9f7;
+      padding: 15px 0;
+      border-bottom: 2px solid #aaa;
+    }
+
+    nav button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    nav button:hover {
+      background: #2980b9;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    textarea {
+      height: 70px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #2ecc71;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #27ae60;
+    }
+
+    #relatorio {
+      background: white;
+      border: 2px solid #3498db;
+      padding: 20px;
+      white-space: pre-wrap;
+      font-family: "Courier New", monospace;
+      line-height: 1.6;
+      margin: 30px auto;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    #exemplo {
+      background: white;
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    #exemplo p, #exemplo pre {
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+  </style>
 </body>
 </html>
